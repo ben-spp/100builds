@@ -11,6 +11,7 @@ import CategorySelector from '@/components/CategorySelector';
 import ImageUpload from '@/components/ImageUpload';
 import CardPreview from '@/components/CardPreview';
 import SubmitModal from '@/components/SubmitModal';
+import LinkAccordion from '@/components/LinkAccordion';
 import { ProjectType } from '@/types/project';
 
 function NewProjectForm() {
@@ -25,10 +26,25 @@ function NewProjectForm() {
     avatar: '',
     tags: [] as string[],
     category: '',
+    needHelpWith: '',
+    // Core links
     site: '',
     github: '',
+    threads: '',
     twitter: '',
-    needHelpWith: '',
+    linkedin: '',
+    // Creative & design
+    dribbble: '',
+    behance: '',
+    instagram: '',
+    // Maker & indie
+    indiehackers: '',
+    producthunt: '',
+    reddit: '',
+    // Optional extras
+    youtube: '',
+    blog: '',
+    discord: '',
   });
 
   const [showModal, setShowModal] = useState(false);
@@ -56,7 +72,18 @@ function NewProjectForm() {
     const step2Fields = [
       formData.site,
       formData.github,
+      formData.threads,
       formData.twitter,
+      formData.linkedin,
+      formData.dribbble,
+      formData.behance,
+      formData.instagram,
+      formData.indiehackers,
+      formData.producthunt,
+      formData.reddit,
+      formData.youtube,
+      formData.blog,
+      formData.discord,
     ];
 
     const step1Completed = step1Fields.filter(f => f).length;
@@ -65,7 +92,7 @@ function NewProjectForm() {
     return [step1Completed, step2Completed];
   };
 
-  const stepFieldCounts = mode === 'help' ? [6, 3] : [5, 3];
+  const stepFieldCounts = mode === 'help' ? [6, 14] : [5, 14];
   const completedFields = getCompletedFields();
 
   const slugify = (text: string): string => {
@@ -131,7 +158,18 @@ function NewProjectForm() {
       links: {
         site: formData.site || undefined,
         github: formData.github || undefined,
+        threads: formData.threads || undefined,
         twitter: formData.twitter || undefined,
+        linkedin: formData.linkedin || undefined,
+        dribbble: formData.dribbble || undefined,
+        behance: formData.behance || undefined,
+        instagram: formData.instagram || undefined,
+        indiehackers: formData.indiehackers || undefined,
+        producthunt: formData.producthunt || undefined,
+        reddit: formData.reddit || undefined,
+        youtube: formData.youtube || undefined,
+        blog: formData.blog || undefined,
+        discord: formData.discord || undefined,
       },
       date: new Date().toISOString().split('T')[0],
     };
@@ -303,32 +341,143 @@ function NewProjectForm() {
                       <p className="text-sm text-text-muted">Add relevant links to your project</p>
                     </div>
 
-                    <FormField
-                      label="Website"
-                      name="site"
-                      type="url"
-                      value={formData.site}
-                      onChange={(value) => setFormData({ ...formData, site: value })}
-                      placeholder="https://100builds.app"
-                    />
+                    {/* Core identity & project links - Open by default */}
+                    <LinkAccordion title="Core identity & project links" description="Your live app or landing page" defaultOpen={true}>
+                      <FormField
+                        label="🌐 Website"
+                        name="site"
+                        type="url"
+                        value={formData.site}
+                        onChange={(value) => setFormData({ ...formData, site: value })}
+                        placeholder="https://yourapp.com"
+                      />
 
-                    <FormField
-                      label="GitHub"
-                      name="github"
-                      type="url"
-                      value={formData.github}
-                      onChange={(value) => setFormData({ ...formData, github: value })}
-                      placeholder="https://github.com/username/repo"
-                    />
+                      <FormField
+                        label="💻 GitHub"
+                        name="github"
+                        type="url"
+                        value={formData.github}
+                        onChange={(value) => setFormData({ ...formData, github: value })}
+                        placeholder="https://github.com/username/repo"
+                      />
 
-                    <FormField
-                      label="Twitter"
-                      name="twitter"
-                      type="url"
-                      value={formData.twitter}
-                      onChange={(value) => setFormData({ ...formData, twitter: value })}
-                      placeholder="https://twitter.com/username"
-                    />
+                      <FormField
+                        label="🧵 Threads"
+                        name="threads"
+                        type="url"
+                        value={formData.threads}
+                        onChange={(value) => setFormData({ ...formData, threads: value })}
+                        placeholder="https://threads.net/@username"
+                      />
+
+                      <FormField
+                        label="🐦 X / Twitter"
+                        name="twitter"
+                        type="url"
+                        value={formData.twitter}
+                        onChange={(value) => setFormData({ ...formData, twitter: value })}
+                        placeholder="https://x.com/username"
+                      />
+
+                      <FormField
+                        label="💬 LinkedIn"
+                        name="linkedin"
+                        type="url"
+                        value={formData.linkedin}
+                        onChange={(value) => setFormData({ ...formData, linkedin: value })}
+                        placeholder="https://linkedin.com/in/username"
+                      />
+                    </LinkAccordion>
+
+                    {/* Creative & design community */}
+                    <LinkAccordion title="Creative & design community" description="Product shots, UI teasers, case studies">
+                      <FormField
+                        label="🎨 Dribbble"
+                        name="dribbble"
+                        type="url"
+                        value={formData.dribbble}
+                        onChange={(value) => setFormData({ ...formData, dribbble: value })}
+                        placeholder="https://dribbble.com/username"
+                      />
+
+                      <FormField
+                        label="🧠 Behance"
+                        name="behance"
+                        type="url"
+                        value={formData.behance}
+                        onChange={(value) => setFormData({ ...formData, behance: value })}
+                        placeholder="https://behance.net/username"
+                      />
+
+                      <FormField
+                        label="📸 Instagram"
+                        name="instagram"
+                        type="url"
+                        value={formData.instagram}
+                        onChange={(value) => setFormData({ ...formData, instagram: value })}
+                        placeholder="https://instagram.com/username"
+                      />
+                    </LinkAccordion>
+
+                    {/* Maker & indie ecosystems */}
+                    <LinkAccordion title="Maker & indie ecosystems" description="Launch posts, devlogs, community threads">
+                      <FormField
+                        label="🚀 Indie Hackers"
+                        name="indiehackers"
+                        type="url"
+                        value={formData.indiehackers}
+                        onChange={(value) => setFormData({ ...formData, indiehackers: value })}
+                        placeholder="https://indiehackers.com/product/yourapp"
+                      />
+
+                      <FormField
+                        label="📈 Product Hunt"
+                        name="producthunt"
+                        type="url"
+                        value={formData.producthunt}
+                        onChange={(value) => setFormData({ ...formData, producthunt: value })}
+                        placeholder="https://producthunt.com/posts/yourapp"
+                      />
+
+                      <FormField
+                        label="💬 Reddit"
+                        name="reddit"
+                        type="url"
+                        value={formData.reddit}
+                        onChange={(value) => setFormData({ ...formData, reddit: value })}
+                        placeholder="https://reddit.com/r/yoursubreddit"
+                      />
+                    </LinkAccordion>
+
+                    {/* Optional extras */}
+                    <LinkAccordion title="Optional extras" description="Demos, devlogs, community spaces">
+                      <FormField
+                        label="📺 YouTube"
+                        name="youtube"
+                        type="url"
+                        value={formData.youtube}
+                        onChange={(value) => setFormData({ ...formData, youtube: value })}
+                        placeholder="https://youtube.com/@username"
+                      />
+
+                      <FormField
+                        label="📚 Blog / Medium / Substack"
+                        name="blog"
+                        type="url"
+                        value={formData.blog}
+                        onChange={(value) => setFormData({ ...formData, blog: value })}
+                        placeholder="https://yourblog.com"
+                      />
+
+                      <FormField
+                        label="💬 Discord / Slack"
+                        name="discord"
+                        type="url"
+                        value={formData.discord}
+                        onChange={(value) => setFormData({ ...formData, discord: value })}
+                        placeholder="https://discord.gg/yourserver"
+                      />
+                    </LinkAccordion>
 
                     <div className="flex gap-4">
                       <button
