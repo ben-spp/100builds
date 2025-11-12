@@ -11,7 +11,7 @@ export default function Badge({ children, variant = 'default' }: BadgeProps) {
   };
 
   return (
-    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${variants[variant]}`}>
+    <span className={`inline-flex items-center px-3 py-1 rounded-lg text-xs font-semibold border ${variants[variant]}`}>
       {children}
     </span>
   );

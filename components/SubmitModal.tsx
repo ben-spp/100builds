@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 
 interface SubmitModalProps {
@@ -10,7 +11,17 @@ interface SubmitModalProps {
 }
 
 export default function SubmitModal({ isOpen, onClose, projectSlug, projectNumber }: SubmitModalProps) {
+  const [copied, setCopied] = useState(false);
+
   if (!isOpen) return null;
+
+  const buildUrl = `${window.location.origin}/build/${projectSlug}`;
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(buildUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -29,7 +40,7 @@ export default function SubmitModal({ isOpen, onClose, projectSlug, projectNumbe
               Build #{projectNumber} is live!
             </h2>
             <p className="text-text-secondary">
-              Your project page is now available
+              Your build page is now available
             </p>
           </div>
 
@@ -45,11 +56,22 @@ export default function SubmitModal({ isOpen, onClose, projectSlug, projectNumbe
           {/* Actions */}
           <div className="space-y-3">
             <Link
-              href={`/project/${projectSlug}`}
+              href={`/build/${projectSlug}`}
               className="block w-full px-6 py-3 bg-primary hover:bg-primary-hover text-white font-semibold rounded-xl transition-colors"
             >
-              View your project
+              View your build
             </Link>
+
+            <button
+              onClick={copyToClipboard}
+              className="flex items-center justify-center gap-2 w-full px-6 py-3 bg-transparent border border-border hover:bg-surface-2 text-text-primary font-semibold rounded-xl transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+              </svg>
+              {copied ? 'Copied!' : 'Copy build URL'}
+            </button>
+
             <button
               onClick={onClose}
               className="block w-full px-6 py-3 bg-surface-2 hover:bg-border text-text-primary font-semibold rounded-xl transition-colors"

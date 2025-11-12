@@ -31,11 +31,11 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="relative w-14 h-7 bg-surface-2 rounded-full border border-border hover:bg-border transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50"
+      className="relative w-14 h-7 bg-surface-2 rounded-full border border-border hover:bg-border transition-colors focus:outline-none overflow-hidden"
       aria-label="Toggle theme"
     >
       <div
-        className={`absolute top-0.5 left-0.5 w-6 h-6 bg-primary rounded-full transition-transform duration-300 flex items-center justify-center ${
+        className={`absolute top-1/2 left-[3px] w-6 h-6 bg-primary rounded-full transform -translate-y-1/2 transition-transform duration-300 flex items-center justify-center ${
           theme === 'dark' ? 'translate-x-7' : 'translate-x-0'
         }`}
       >
