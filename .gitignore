@@ -23,6 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env*.local
 
 # vercel
@@ -34,3 +35,6 @@ next-env.d.ts
 
 # user uploads
 /public/projects
+
+# project data (user submissions)
+data/*.json
