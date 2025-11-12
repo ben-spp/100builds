@@ -69,30 +69,21 @@ function NewProjectForm() {
       step1Fields.push(formData.needHelpWith);
     }
 
-    const step2Fields = [
-      formData.site,
-      formData.github,
-      formData.threads,
-      formData.twitter,
-      formData.linkedin,
-      formData.dribbble,
-      formData.behance,
-      formData.instagram,
-      formData.indiehackers,
-      formData.producthunt,
-      formData.reddit,
-      formData.youtube,
-      formData.blog,
-      formData.discord,
-    ];
+    // Count all links as just 1 field
+    const hasAnyLink = !!(
+      formData.site || formData.github || formData.threads || formData.twitter ||
+      formData.linkedin || formData.dribbble || formData.behance || formData.instagram ||
+      formData.indiehackers || formData.producthunt || formData.reddit ||
+      formData.youtube || formData.blog || formData.discord
+    );
 
     const step1Completed = step1Fields.filter(f => f).length;
-    const step2Completed = step2Fields.filter(f => f).length;
+    const step2Completed = hasAnyLink ? 1 : 0;
 
     return [step1Completed, step2Completed];
   };
 
-  const stepFieldCounts = mode === 'help' ? [6, 14] : [5, 14];
+  const stepFieldCounts = mode === 'help' ? [6, 1] : [5, 1];
   const completedFields = getCompletedFields();
 
   const slugify = (text: string): string => {
