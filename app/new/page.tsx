@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -18,6 +18,8 @@ function NewProjectForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const mode = (searchParams.get('mode') || 'show') as ProjectType;
+
+  const STORAGE_KEY = '100builds_draft';
 
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -46,6 +48,24 @@ function NewProjectForm() {
     blog: '',
     discord: '',
   });
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setFormData(parsed);
+      } catch (e) {
+        console.error('Failed to parse saved form data', e);
+      }
+    }
+  }, []);
+
+  // Save to localStorage whenever formData changes
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+  }, [formData]);
 
   const [showModal, setShowModal] = useState(false);
   const [projectSlug, setProjectSlug] = useState('');
@@ -177,6 +197,8 @@ function NewProjectForm() {
         setProjectSlug(slug);
         setProjectNumber(data.projectNumber);
         setShowModal(true);
+        // Clear localStorage on successful submission
+        localStorage.removeItem(STORAGE_KEY);
       }
     } catch (error) {
       console.error('Error submitting project:', error);
