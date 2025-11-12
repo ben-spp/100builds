@@ -504,6 +504,22 @@ function NewProjectForm() {
                   category={formData.category}
                   type={mode}
                   needs={formData.needHelpWith}
+                  links={{
+                    site: formData.site,
+                    github: formData.github,
+                    threads: formData.threads,
+                    twitter: formData.twitter,
+                    linkedin: formData.linkedin,
+                    dribbble: formData.dribbble,
+                    behance: formData.behance,
+                    instagram: formData.instagram,
+                    indiehackers: formData.indiehackers,
+                    producthunt: formData.producthunt,
+                    reddit: formData.reddit,
+                    youtube: formData.youtube,
+                    blog: formData.blog,
+                    discord: formData.discord,
+                  }}
                 />
               </div>
             </div>

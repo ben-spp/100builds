@@ -9,6 +9,22 @@ interface CardPreviewProps {
   category?: string;
   type: ProjectType;
   needs?: string;
+  links?: {
+    site?: string;
+    github?: string;
+    threads?: string;
+    twitter?: string;
+    linkedin?: string;
+    dribbble?: string;
+    behance?: string;
+    instagram?: string;
+    indiehackers?: string;
+    producthunt?: string;
+    reddit?: string;
+    youtube?: string;
+    blog?: string;
+    discord?: string;
+  };
 }
 
 export default function CardPreview({
@@ -19,6 +35,7 @@ export default function CardPreview({
   category,
   type,
   needs,
+  links,
 }: CardPreviewProps) {
   // Generate initials from name if no avatar
   const initials = name
@@ -27,6 +44,29 @@ export default function CardPreview({
     .join('')
     .toUpperCase()
     .slice(0, 2);
+
+  // Link labels mapping
+  const linkLabels: Record<string, string> = {
+    site: 'Website',
+    github: 'GitHub',
+    threads: 'Threads',
+    twitter: 'X / Twitter',
+    linkedin: 'LinkedIn',
+    dribbble: 'Dribbble',
+    behance: 'Behance',
+    instagram: 'Instagram',
+    indiehackers: 'Indie Hackers',
+    producthunt: 'Product Hunt',
+    reddit: 'Reddit',
+    youtube: 'YouTube',
+    blog: 'Blog',
+    discord: 'Discord',
+  };
+
+  // Get all filled links except site (site is shown at top)
+  const otherLinks = links ? Object.entries(links)
+    .filter(([key, value]) => value && key !== 'site')
+    .map(([key, value]) => ({ label: linkLabels[key], url: value })) : [];
 
   return (
     <div className="w-full bg-surface-1 border border-border rounded-2xl p-8 space-y-6">
@@ -46,6 +86,22 @@ export default function CardPreview({
           <h3 className="text-2xl font-bold text-text-primary">
             {name || 'Project Name'}
           </h3>
+
+          {/* Website link (if provided) */}
+          {links?.site && (
+            <a
+              href={links.site}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-sm text-text-muted hover:text-primary transition-colors"
+            >
+              <span>{new URL(links.site).hostname}</span>
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          )}
+
           <div className="flex flex-wrap gap-2">
             <Badge variant={type === 'show' ? 'primary' : 'secondary'}>
               {type === 'show' ? 'Visibility' : 'Need Help'}
@@ -59,6 +115,32 @@ export default function CardPreview({
       <p className="text-text-secondary leading-relaxed">
         {description || 'Add a description to see the preview...'}
       </p>
+
+      {/* Other Links */}
+      {otherLinks.length > 0 && (
+        <>
+          <div className="border-t border-border"></div>
+          <div className="space-y-3">
+            <h4 className="text-sm font-bold text-text-secondary">Connect with me</h4>
+            <div className="flex flex-wrap gap-3">
+              {otherLinks.map((link, index) => (
+                <a
+                  key={index}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-primary transition-colors"
+                >
+                  <span>{link.label}</span>
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Need Help With */}
       {type === 'help' && needs && (
