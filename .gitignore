@@ -37,4 +37,4 @@ next-env.d.ts
 /public/projects
 
 # project data (user submissions)
-data/*.json
+# data/*.json (commented out - we need projects.json for build)
