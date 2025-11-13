@@ -7,6 +7,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const slug = formData.get('slug') as string;
+    const type = formData.get('type') as string; // 'featured' or undefined (avatar)
 
     if (!file || !slug) {
       return NextResponse.json(
@@ -23,7 +24,7 @@ export async function POST(request: NextRequest) {
 
     // Get file extension
     const ext = file.name.split('.').pop();
-    const filename = `avatar.${ext}`;
+    const filename = type === 'featured' ? `featured.${ext}` : `avatar.${ext}`;
     const filepath = path.join(projectDir, filename);
 
     // Convert file to buffer and save

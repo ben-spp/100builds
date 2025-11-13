@@ -7,6 +7,7 @@ export interface Project {
   name: string;
   description: string;
   avatar?: string;
+  featuredImage?: string;
   tags?: string[];
   category?: string;
   needs?: string;
@@ -30,5 +31,8 @@ export interface Project {
     blog?: string;
     discord?: string;
   };
+  email?: string;
+  claimed?: boolean;
+  claimToken?: string;
   date: string;
 }

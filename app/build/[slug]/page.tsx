@@ -4,6 +4,7 @@ import path from 'path';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Badge from '@/components/Badge';
+import BuildPageClient from '@/components/BuildPageClient';
 import { Project } from '@/types/project';
 
 function getProjects(): Project[] {
@@ -80,161 +81,136 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     .map(([key, value]) => ({ label: linkLabels[key], url: value })) : [];
 
   return (
-    <>
+    <BuildPageClient
+      projectSlug={slug}
+      projectNumber={number}
+      isClaimed={project.claimed || false}
+    >
       <Header projectCount={projects.length} />
-      <main className="min-h-screen bg-gradient-to-b from-surface-0 to-surface-1 py-16 px-4 pt-24">
-      <div className="max-w-3xl mx-auto">
-        {/* Back Link */}
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-text-muted hover:text-text-primary transition-colors mb-8"
-        >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Back to home
-        </Link>
-
-        {/* Build Card */}
-        <div className="bg-surface-1 border border-border rounded-3xl shadow-2xl overflow-hidden">
-          {/* Header Section */}
-          <div className="p-8 lg:p-12">
-            <div className="flex items-start gap-6 mb-8">
-              {/* Avatar */}
-              <div className="w-24 h-24 lg:w-28 lg:h-28 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0 border-2 border-primary/20">
+      <main className="min-h-screen bg-surface-0 py-16 px-4 pt-24">
+        <div className="max-w-5xl mx-auto">
+          {/* Header Section - Two Columns */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-8 mb-12">
+            {/* Left Column: Avatar, Name, Tags + Mobile Buttons */}
+            <div className="flex-1 flex items-center gap-4 lg:gap-6">
+              {/* Favicon Circle */}
+              <div className="w-20 h-20 rounded-full bg-surface-1 border border-border flex items-center justify-center flex-shrink-0 overflow-hidden">
                 {project.avatar ? (
                   <img
                     src={project.avatar}
                     alt={project.name}
-                    className="w-full h-full rounded-2xl object-cover"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-3xl lg:text-4xl font-bold text-primary">{initials}</span>
+                  <span className="text-2xl font-bold text-primary">{initials}</span>
                 )}
               </div>
 
-              {/* Title Section */}
-              <div className="flex-1 min-w-0 flex flex-col justify-center">
-                <div className="mb-1">
-                  <span className="inline-block px-2.5 py-0.5 bg-surface-2 text-text-muted text-xs font-semibold rounded-full">
-                    Build #{number}
-                  </span>
-                </div>
-                <h1 className="text-2xl lg:text-3xl font-black text-text-primary mb-2 leading-tight break-words">
-                  {project.name}
-                </h1>
+              {/* Name & Tags */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-3 mb-3">
+                  <h1 className="text-3xl lg:text-4xl font-bold text-text-primary leading-tight break-words">
+                    {project.name}
+                  </h1>
 
-                {/* Website link */}
-                {project.links?.site && (() => {
-                  try {
-                    const hostname = new URL(project.links.site).hostname;
-                    return (
-                      <a
-                        href={project.links.site}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-xs text-text-muted hover:text-primary transition-colors mb-2"
-                      >
-                        <span>{hostname}</span>
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </a>
-                    );
-                  } catch {
-                    return (
-                      <a
-                        href={project.links.site}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-xs text-text-muted hover:text-primary transition-colors mb-2"
-                      >
-                        <span>{project.links.site}</span>
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </a>
-                    );
-                  }
-                })()}
+                  {/* Mobile Action Buttons */}
+                  <div className="flex lg:hidden gap-2 flex-shrink-0 ml-auto">
+                    {/* Like Button */}
+                    <button className="flex items-center justify-center w-10 h-10 rounded-full bg-transparent border border-border hover:bg-surface-1 text-text-primary transition-colors">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                      </svg>
+                    </button>
 
-                {/* Badges */}
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant={project.type === 'show' ? 'primary' : 'secondary'}>
-                    {project.type === 'show' ? 'Visibility' : 'Need Help'}
-                  </Badge>
-                  {project.category && <Badge>{project.category}</Badge>}
+                    {/* Get in Touch Button */}
+                    <button className="flex items-center justify-center w-10 h-10 rounded-full bg-text-primary hover:bg-text-secondary text-surface-0 transition-colors">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
+
+                {/* Tags */}
+                {project.tags && project.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.map((tag, index) => (
+                      <span
+                        key={index}
+                        className="px-2 py-1 bg-surface-1 border border-border text-text-secondary rounded-lg text-xs"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Description */}
-            <div className="mb-8">
-              <h2 className="text-sm font-bold text-text-secondary mb-3">About {project.name}</h2>
-              <p className="text-text-secondary text-base leading-relaxed">
+            {/* Desktop Action Buttons */}
+            <div className="hidden lg:flex gap-3">
+              {/* Like Button */}
+              <button className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-transparent border border-border hover:bg-surface-1 text-text-primary transition-colors">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.0 0 00-6.364 0z" />
+                </svg>
+                <span>0</span>
+              </button>
+
+              {/* Get in Touch Button */}
+              <button className="px-6 py-3 rounded-xl bg-text-primary hover:bg-text-secondary text-surface-0 font-semibold transition-colors">
+                Get in touch
+              </button>
+            </div>
+          </div>
+
+          {/* Featured Image */}
+          {project.featuredImage && (
+            <div className="mb-12 rounded-2xl overflow-hidden bg-surface-1 border border-border">
+              <img
+                src={project.featuredImage}
+                alt={project.name}
+                className="w-full aspect-[4/3] object-cover"
+              />
+            </div>
+          )}
+
+          {/* Description */}
+          <div className="mb-16">
+            <div className="max-w-[767px]">
+              <p className="text-[20px] leading-[32px] text-text-primary">
                 {project.description}
               </p>
             </div>
-
-            {/* Need Help With */}
-            {project.type === 'help' && project.needs && (
-              <div className="p-6 bg-secondary/5 border border-secondary/20 rounded-xl mb-8">
-                <div className="text-sm font-semibold text-text-secondary mb-2">Need help with</div>
-                <div className="text-lg text-secondary font-bold">{project.needs}</div>
-              </div>
-            )}
-
-            {/* Tags */}
-            {project.tags && project.tags.length > 0 && (
-              <div className="mb-2">
-                <h2 className="text-sm font-bold text-text-secondary mb-3">Tags</h2>
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1.5 bg-surface-2 text-text-secondary rounded-lg text-sm"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Other Links */}
-            {otherLinks.length > 0 && (
-              <div className="border-t border-border pt-6">
-                <h4 className="text-sm font-bold text-text-secondary mb-4">Connect</h4>
-                <div className="flex flex-wrap gap-3">
-                  {otherLinks.map((link, index) => (
-                    <a
-                      key={index}
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-primary transition-colors"
-                    >
-                      <span>{link.label}</span>
-                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
-          {/* Footer */}
-          <div className="px-8 lg:px-12 py-6 bg-surface-2/50 border-t border-border flex items-center justify-between">
-            <div className="text-sm text-text-muted">
-              <span className="font-semibold text-text-primary">100builds</span> • Build #{number}
+          {/* Divider */}
+          <div className="w-full h-px bg-border mb-12"></div>
+
+          {/* Additional Links */}
+          {otherLinks.length > 0 && (
+            <div>
+              <h4 className="text-lg font-semibold text-text-primary mb-6">Links</h4>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                {otherLinks.map((link, index) => (
+                  <a
+                    key={index}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-3 bg-surface-1 border border-border hover:bg-surface-2 text-text-primary rounded-xl transition-colors text-sm font-medium"
+                  >
+                    <span>{link.label}</span>
+                    <svg className="w-3.5 h-3.5 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
-
-      </div>
-    </main>
-    </>
+      </main>
+    </BuildPageClient>
   );
 }

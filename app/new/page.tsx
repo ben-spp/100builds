@@ -26,6 +26,7 @@ function NewProjectForm() {
     name: '',
     description: '',
     avatar: '',
+    featuredImage: '',
     tags: [] as string[],
     category: '',
     needHelpWith: '',
@@ -150,6 +151,28 @@ function NewProjectForm() {
     return data.url;
   };
 
+  const handleFeaturedImageUpload = async (file: File): Promise<string> => {
+    const slug = slugify(formData.name);
+
+    const uploadFormData = new FormData();
+    uploadFormData.append('file', file);
+    uploadFormData.append('slug', slug);
+    uploadFormData.append('type', 'featured');
+
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: uploadFormData,
+    });
+
+    if (!response.ok) {
+      throw new Error('Upload failed');
+    }
+
+    const data = await response.json();
+    setFormData({ ...formData, featuredImage: data.url });
+    return data.url;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -163,6 +186,7 @@ function NewProjectForm() {
       name: formData.name,
       description: formData.description,
       avatar: formData.avatar || undefined,
+      featuredImage: formData.featuredImage || undefined,
       tags: formData.tags.length > 0 ? formData.tags : undefined,
       category: formData.category,
       needs: mode === 'help' ? formData.needHelpWith : undefined,
@@ -193,12 +217,10 @@ function NewProjectForm() {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setProjectSlug(slug);
-        setProjectNumber(data.projectNumber);
-        setShowModal(true);
         // Clear localStorage on successful submission
         localStorage.removeItem(STORAGE_KEY);
+        // Redirect directly to build page where claim modal will appear
+        router.push(`/build/${slug}`);
       }
     } catch (error) {
       console.error('Error submitting project:', error);
@@ -296,6 +318,13 @@ function NewProjectForm() {
                       label="Project Avatar"
                       currentImage={formData.avatar}
                       onUpload={handleImageUpload}
+                      slug={slugify(formData.name) || 'temp'}
+                    />
+
+                    <ImageUpload
+                      label="Featured Image (1024x768px recommended)"
+                      currentImage={formData.featuredImage}
+                      onUpload={handleFeaturedImageUpload}
                       slug={slugify(formData.name) || 'temp'}
                     />
 
