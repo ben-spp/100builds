@@ -62,23 +62,47 @@ export async function GET() {
     );
 
     // Parse JSON fields
-    const projects: Project[] = result.rows.map((row: any) => ({
-      id: row.id,
-      slug: row.slug,
-      type: row.type,
-      name: row.name,
-      description: row.description,
-      avatar: row.avatar,
-      featuredImage: row.featured_image,
-      tags: row.tags ? JSON.parse(row.tags) : [],
-      category: row.category,
-      needs: row.needs,
-      links: row.links ? JSON.parse(row.links) : {},
-      email: row.email,
-      claimed: Boolean(row.claimed),
-      claimToken: row.claim_token,
-      date: row.date,
-    }));
+    const projects: Project[] = result.rows.map((row: any) => {
+      // Handle tags - could be JSONB, string, or null
+      let tags = [];
+      if (row.tags) {
+        try {
+          tags = typeof row.tags === 'string' ? JSON.parse(row.tags) : row.tags;
+        } catch (e) {
+          console.error('Error parsing tags:', e);
+          tags = [];
+        }
+      }
+
+      // Handle links - could be JSONB, string, or null
+      let links = {};
+      if (row.links) {
+        try {
+          links = typeof row.links === 'string' ? JSON.parse(row.links) : row.links;
+        } catch (e) {
+          console.error('Error parsing links:', e);
+          links = {};
+        }
+      }
+
+      return {
+        id: row.id,
+        slug: row.slug,
+        type: row.type,
+        name: row.name,
+        description: row.description,
+        avatar: row.avatar,
+        featuredImage: row.featured_image,
+        tags,
+        category: row.category,
+        needs: row.needs,
+        links,
+        email: row.email,
+        claimed: Boolean(row.claimed),
+        claimToken: row.claim_token,
+        date: row.date,
+      };
+    });
 
     return NextResponse.json(projects);
   } catch (error) {
