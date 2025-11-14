@@ -165,7 +165,14 @@ function NewProjectForm() {
   const canProceedToStep2 = formData.name && formData.description && (mode === 'show' || formData.needHelpWith);
 
   const handleImageUpload = async (file: File): Promise<string> => {
+    if (!formData.name.trim()) {
+      throw new Error('Please enter a project name first');
+    }
+
     const slug = slugify(formData.name);
+    if (!slug) {
+      throw new Error('Please enter a valid project name first');
+    }
 
     const uploadFormData = new FormData();
     uploadFormData.append('file', file);
@@ -177,7 +184,8 @@ function NewProjectForm() {
     });
 
     if (!response.ok) {
-      throw new Error('Upload failed');
+      const error = await response.json();
+      throw new Error(error.error || 'Upload failed');
     }
 
     const data = await response.json();
@@ -186,7 +194,14 @@ function NewProjectForm() {
   };
 
   const handleFeaturedImageUpload = async (file: File): Promise<string> => {
+    if (!formData.name.trim()) {
+      throw new Error('Please enter a project name first');
+    }
+
     const slug = slugify(formData.name);
+    if (!slug) {
+      throw new Error('Please enter a valid project name first');
+    }
 
     const uploadFormData = new FormData();
     uploadFormData.append('file', file);
@@ -199,7 +214,8 @@ function NewProjectForm() {
     });
 
     if (!response.ok) {
-      throw new Error('Upload failed');
+      const error = await response.json();
+      throw new Error(error.error || 'Upload failed');
     }
 
     const data = await response.json();
