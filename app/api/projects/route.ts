@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
       `INSERT INTO projects (
         id, slug, type, name, description, avatar, featured_image,
         tags, category, needs, links, email, claimed, claim_token, date
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
       [
         project.id,
         project.slug,
