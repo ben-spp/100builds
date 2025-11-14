@@ -1,1 +1,59 @@
-[]
+[
+  {
+    "id": "1762974460887",
+    "slug": "sgnl8",
+    "type": "show",
+    "name": "sgnl8",
+    "description": "analytics done right",
+    "avatar": "/projects/sgnl8/avatar.png",
+    "tags": [
+      "analytics",
+      "marketing",
+      "user behavior"
+    ],
+    "category": "web app",
+    "links": {
+      "site": "https://sgnl8.com"
+    },
+    "date": "2025-11-12",
+    "email": "peetermans.b@gmail.com",
+    "claimToken": "ee9f9ecc47f632eca6ab7e6d4e1c6e7302fd55e047470c61b672892b8c42a5ae",
+    "claimed": false
+  },
+  {
+    "id": "1762974793025",
+    "slug": "test1",
+    "type": "show",
+    "name": "test1",
+    "description": "test123",
+    "category": "web app",
+    "links": {},
+    "date": "2025-11-12"
+  },
+  {
+    "id": "1762980466661",
+    "slug": "test",
+    "type": "show",
+    "name": "test",
+    "description": "test",
+    "tags": [
+      "test"
+    ],
+    "category": "web app",
+    "links": {},
+    "date": "2025-11-12"
+  },
+  {
+    "id": "1763008707432",
+    "slug": "test123",
+    "type": "show",
+    "name": "test123",
+    "description": "test123",
+    "category": "",
+    "links": {},
+    "date": "2025-11-13",
+    "email": "test@gmail.com",
+    "claimToken": "a9f3b7ea31715c544a2d453792227b70d9317387786c61186bdaeeca41e69c94",
+    "claimed": false
+  }
+]

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { kv } from '@vercel/kv';
+import { Project } from '@/types/project';
+
+const PROJECTS_KEY = 'projects';
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,10 +14,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(new URL('/?error=invalid-token', request.url));
     }
 
-    // Read projects
-    const filePath = path.join(process.cwd(), 'data', 'projects.json');
-    const fileContents = fs.readFileSync(filePath, 'utf8');
-    const projects = JSON.parse(fileContents);
+    // Get projects from KV
+    const projects: Project[] = (await kv.get(PROJECTS_KEY)) || [];
 
     // Find project with matching token
     const projectIndex = projects.findIndex(
@@ -30,8 +30,8 @@ export async function GET(request: NextRequest) {
     projects[projectIndex].claimed = true;
     projects[projectIndex].claimToken = undefined; // Remove token after verification
 
-    // Save projects
-    fs.writeFileSync(filePath, JSON.stringify(projects, null, 2));
+    // Save projects to KV
+    await kv.set(PROJECTS_KEY, projects);
 
     // Redirect to build page with success message
     return NextResponse.redirect(new URL(`/build/${slug}?claimed=true`, request.url));

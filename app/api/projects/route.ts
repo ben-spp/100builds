@@ -1,30 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { kv } from '@vercel/kv';
 import { Project } from '@/types/project';
+
+const PROJECTS_KEY = 'projects';
 
 export async function POST(request: NextRequest) {
   try {
     const project: Project = await request.json();
 
-    // Save to main projects index
-    const filePath = path.join(process.cwd(), 'data', 'projects.json');
-    const fileContents = fs.readFileSync(filePath, 'utf8');
-    const projects: Project[] = JSON.parse(fileContents);
+    // Get existing projects from KV
+    const projects: Project[] = (await kv.get(PROJECTS_KEY)) || [];
 
     // Add new project
     projects.push(project);
 
-    // Write back to main index
-    fs.writeFileSync(filePath, JSON.stringify(projects, null, 2));
-
-    // Also save to individual project folder
-    const projectDir = path.join(process.cwd(), 'public', 'projects', project.slug);
-    if (!fs.existsSync(projectDir)) {
-      fs.mkdirSync(projectDir, { recursive: true });
-    }
-    const projectFilePath = path.join(projectDir, 'project.json');
-    fs.writeFileSync(projectFilePath, JSON.stringify(project, null, 2));
+    // Save back to KV
+    await kv.set(PROJECTS_KEY, projects);
 
     return NextResponse.json({
       success: true,
@@ -41,9 +32,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const filePath = path.join(process.cwd(), 'data', 'projects.json');
-    const fileContents = fs.readFileSync(filePath, 'utf8');
-    const projects: Project[] = JSON.parse(fileContents);
+    const projects: Project[] = (await kv.get(PROJECTS_KEY)) || [];
 
     return NextResponse.json(projects);
   } catch (error) {

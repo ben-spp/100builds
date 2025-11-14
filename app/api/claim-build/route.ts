@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { kv } from '@vercel/kv';
 import crypto from 'crypto';
 import { ServerClient } from 'postmark';
+import { Project } from '@/types/project';
+
+const PROJECTS_KEY = 'projects';
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,10 +27,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Read projects
-    const filePath = path.join(process.cwd(), 'data', 'projects.json');
-    const fileContents = fs.readFileSync(filePath, 'utf8');
-    const projects = JSON.parse(fileContents);
+    // Get projects from KV
+    const projects: Project[] = (await kv.get(PROJECTS_KEY)) || [];
 
     // Find project
     const projectIndex = projects.findIndex((p: any) => p.slug === slug);
@@ -55,8 +55,8 @@ export async function POST(request: NextRequest) {
     projects[projectIndex].claimToken = claimToken;
     projects[projectIndex].claimed = false; // Will be true after email verification
 
-    // Save projects
-    fs.writeFileSync(filePath, JSON.stringify(projects, null, 2));
+    // Save projects to KV
+    await kv.set(PROJECTS_KEY, projects);
 
     // Generate verification URL
     const verificationUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:8888'}/api/verify-claim?token=${claimToken}&slug=${slug}`;
