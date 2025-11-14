@@ -13,11 +13,19 @@ export default function ImageUpload({ label, currentImage, onUpload, slug }: Ima
   const [preview, setPreview] = useState<string | undefined>(currentImage);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [error, setError] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = async (file: File) => {
+    setError('');
+
     if (!file.type.startsWith('image/')) {
-      alert('Please upload an image file');
+      setError('Please upload an image file (PNG, JPG, GIF)');
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      setError('Image must be smaller than 2MB');
       return;
     }
 
@@ -32,8 +40,10 @@ export default function ImageUpload({ label, currentImage, onUpload, slug }: Ima
     setIsUploading(true);
     try {
       await onUpload(file);
+      setError('');
     } catch (error) {
       console.error('Upload failed:', error);
+      setError('Upload failed. Please make sure you\'ve entered a project name first.');
       setPreview(currentImage);
     } finally {
       setIsUploading(false);
@@ -132,9 +142,13 @@ export default function ImageUpload({ label, currentImage, onUpload, slug }: Ima
         className="hidden"
       />
 
-      <p className="text-xs text-text-muted">
-        Square images work best (200x200px recommended)
-      </p>
+      {error ? (
+        <p className="text-xs text-red-500">{error}</p>
+      ) : (
+        <p className="text-xs text-text-muted">
+          Square images work best (200x200px recommended)
+        </p>
+      )}
     </div>
   );
 }

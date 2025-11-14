@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { put } from '@vercel/blob';
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,28 +15,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create project directory if it doesn't exist
-    const projectDir = path.join(process.cwd(), 'public', 'projects', slug);
-    if (!fs.existsSync(projectDir)) {
-      fs.mkdirSync(projectDir, { recursive: true });
-    }
-
     // Get file extension
     const ext = file.name.split('.').pop();
     const filename = type === 'featured' ? `featured.${ext}` : `avatar.${ext}`;
-    const filepath = path.join(projectDir, filename);
+    const pathname = `projects/${slug}/${filename}`;
 
-    // Convert file to buffer and save
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    fs.writeFileSync(filepath, buffer);
-
-    // Return public URL
-    const publicUrl = `/projects/${slug}/${filename}`;
+    // Upload to Vercel Blob
+    const blob = await put(pathname, file, {
+      access: 'public',
+      addRandomSuffix: false, // Keep consistent filename for overwrites
+    });
 
     return NextResponse.json({
       success: true,
-      url: publicUrl,
+      url: blob.url,
     });
   } catch (error) {
     console.error('Error uploading file:', error);
