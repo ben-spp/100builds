@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { kv } from '@vercel/kv';
-import { Project } from '@/types/project';
-
-const PROJECTS_KEY = 'projects';
+import pool from '@/lib/db';
+import { RowDataPacket } from 'mysql2';
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,24 +12,21 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(new URL('/?error=invalid-token', request.url));
     }
 
-    // Get projects from KV
-    const projects: Project[] = (await kv.get(PROJECTS_KEY)) || [];
-
     // Find project with matching token
-    const projectIndex = projects.findIndex(
-      (p: any) => p.slug === slug && p.claimToken === token
+    const [rows] = await pool.query<RowDataPacket[]>(
+      'SELECT * FROM projects WHERE slug = ? AND claim_token = ?',
+      [slug, token]
     );
 
-    if (projectIndex === -1) {
+    if (rows.length === 0) {
       return NextResponse.redirect(new URL('/?error=invalid-token', request.url));
     }
 
     // Mark as claimed
-    projects[projectIndex].claimed = true;
-    projects[projectIndex].claimToken = undefined; // Remove token after verification
-
-    // Save projects to KV
-    await kv.set(PROJECTS_KEY, projects);
+    await pool.query(
+      'UPDATE projects SET claimed = TRUE, claim_token = NULL WHERE slug = ?',
+      [slug]
+    );
 
     // Redirect to build page with success message
     return NextResponse.redirect(new URL(`/build/${slug}?claimed=true`, request.url));

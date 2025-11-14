@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { kv } from '@vercel/kv';
+import pool from '@/lib/db';
 import crypto from 'crypto';
 import { ServerClient } from 'postmark';
-import { Project } from '@/types/project';
-
-const PROJECTS_KEY = 'projects';
+import { RowDataPacket } from 'mysql2';
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,20 +25,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get projects from KV
-    const projects: Project[] = (await kv.get(PROJECTS_KEY)) || [];
-
     // Find project
-    const projectIndex = projects.findIndex((p: any) => p.slug === slug);
-    if (projectIndex === -1) {
+    const [rows] = await pool.query<RowDataPacket[]>(
+      'SELECT * FROM projects WHERE slug = ?',
+      [slug]
+    );
+
+    if (rows.length === 0) {
       return NextResponse.json(
         { error: 'Project not found' },
         { status: 404 }
       );
     }
 
+    const project = rows[0];
+
     // Check if already claimed
-    if (projects[projectIndex].claimed) {
+    if (project.claimed) {
       return NextResponse.json(
         { error: 'This build has already been claimed' },
         { status: 400 }
@@ -51,12 +52,10 @@ export async function POST(request: NextRequest) {
     const claimToken = crypto.randomBytes(32).toString('hex');
 
     // Update project
-    projects[projectIndex].email = email;
-    projects[projectIndex].claimToken = claimToken;
-    projects[projectIndex].claimed = false; // Will be true after email verification
-
-    // Save projects to KV
-    await kv.set(PROJECTS_KEY, projects);
+    await pool.query(
+      'UPDATE projects SET email = ?, claim_token = ?, claimed = FALSE WHERE slug = ?',
+      [email, claimToken, slug]
+    );
 
     // Generate verification URL
     const verificationUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:8888'}/api/verify-claim?token=${claimToken}&slug=${slug}`;
