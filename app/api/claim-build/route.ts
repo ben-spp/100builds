@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
                   Click the button below to claim your build and unlock editing abilities:
                 </p>
                 <div style="text-align: center; margin: 30px 0;">
-                  <a href="${verificationUrl}" style="display: inline-block; background: #667eea; color: white; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 16px;">
+                  <a href="${verificationUrl}" style="display: inline-block; background: #667eea; color: #ffffff; text-decoration: none; padding: 12px 32px; border-radius: 12px; font-weight: 600; font-size: 16px;">
                     Claim Your Build
                   </a>
                 </div>

@@ -76,7 +76,7 @@ function NewProjectForm() {
   const [checkingSlug, setCheckingSlug] = useState(false);
 
   const categories = ['app', 'web app', 'concept'];
-  const helpOptions = ['design', 'development', 'marketing', 'funding', 'other'];
+  const helpOptions = ['design', 'development', 'marketing', 'funding', 'exposure', 'other'];
 
   // Calculate field completion
   const getCompletedFields = () => {
