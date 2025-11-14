@@ -93,13 +93,6 @@ export default function Home() {
           </div>
         </Link>
       </div>
-
-      {/* Tagline */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-4">
-        <p className="text-center text-text-muted text-sm max-w-2xl">
-          The internet's project board — show what you're building or find help to finish it.
-        </p>
-      </div>
     </main>
     </>
   );

@@ -256,7 +256,7 @@ function NewProjectForm() {
             </h1>
             <p className="text-text-secondary text-lg">
               {mode === 'show'
-                ? 'Create a beautiful page to showcase what you\'re building'
+                ? 'Showcase your creation with the world'
                 : 'Let the community know what you need help with'
               }
             </p>
