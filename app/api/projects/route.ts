@@ -23,8 +23,14 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error saving project:', error);
+    console.error('Error details:', error instanceof Error ? error.message : String(error));
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
     return NextResponse.json(
-      { success: false, error: 'Failed to save project' },
+      {
+        success: false,
+        error: 'Failed to save project',
+        details: error instanceof Error ? error.message : String(error)
+      },
       { status: 500 }
     );
   }
