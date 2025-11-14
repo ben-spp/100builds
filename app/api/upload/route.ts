@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const filename = type === 'featured' ? `featured.${ext}` : `avatar.${ext}`;
     const pathname = `projects/${slug}/${filename}`;
 
-    // Upload to Vercel Blob
+    // Upload to Vercel Blob Storage
     const blob = await put(pathname, file, {
       access: 'public',
       addRandomSuffix: false, // Keep consistent filename for overwrites
