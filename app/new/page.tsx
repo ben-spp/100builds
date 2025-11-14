@@ -72,6 +72,8 @@ function NewProjectForm() {
   const [projectSlug, setProjectSlug] = useState('');
   const [projectNumber, setProjectNumber] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [slugAvailable, setSlugAvailable] = useState<boolean | null>(null);
+  const [checkingSlug, setCheckingSlug] = useState(false);
 
   const categories = ['app', 'web app', 'concept'];
   const helpOptions = ['design', 'development', 'marketing', 'funding', 'other'];
@@ -115,6 +117,38 @@ function NewProjectForm() {
       .replace(/[\s_-]+/g, '-')
       .replace(/^-+|-+$/g, '');
   };
+
+  // Check slug availability when name changes
+  useEffect(() => {
+    const checkSlug = async () => {
+      if (!formData.name.trim()) {
+        setSlugAvailable(null);
+        return;
+      }
+
+      const slug = slugify(formData.name);
+      if (!slug) {
+        setSlugAvailable(null);
+        return;
+      }
+
+      setCheckingSlug(true);
+      try {
+        const response = await fetch(`/api/check-slug?slug=${encodeURIComponent(slug)}`);
+        const data = await response.json();
+        setSlugAvailable(data.available);
+      } catch (error) {
+        console.error('Error checking slug:', error);
+        setSlugAvailable(null);
+      } finally {
+        setCheckingSlug(false);
+      }
+    };
+
+    // Debounce the check
+    const timeout = setTimeout(checkSlug, 500);
+    return () => clearTimeout(timeout);
+  }, [formData.name]);
 
   const handleNext = () => {
     if (currentStep < 2) {
@@ -295,14 +329,28 @@ function NewProjectForm() {
                 {/* Step 1: Project Details */}
                 {currentStep === 1 && (
                   <div className="space-y-6">
-                    <FormField
-                      label="Project Name"
-                      name="name"
-                      value={formData.name}
-                      onChange={(value) => setFormData({ ...formData, name: value })}
-                      placeholder="Enter the name of your build"
-                      required
-                    />
+                    <div>
+                      <FormField
+                        label="Project Name"
+                        name="name"
+                        value={formData.name}
+                        onChange={(value) => setFormData({ ...formData, name: value })}
+                        placeholder="Enter the name of your build"
+                        required
+                        error={slugAvailable === false}
+                      />
+                      {formData.name && (
+                        <div className="mt-2">
+                          {checkingSlug ? (
+                            <p className="text-sm text-text-muted">Checking availability...</p>
+                          ) : slugAvailable === false ? (
+                            <p className="text-sm text-red-500">⚠️ This project name is not available</p>
+                          ) : slugAvailable === true ? (
+                            <p className="text-sm text-green-500">✓ Project name is available</p>
+                          ) : null}
+                        </div>
+                      )}
+                    </div>
 
                     <FormField
                       label="Description"
@@ -367,7 +415,7 @@ function NewProjectForm() {
                     <button
                       type="button"
                       onClick={handleNext}
-                      disabled={!canProceedToStep2}
+                      disabled={!canProceedToStep2 || slugAvailable === false}
                       className="w-full px-6 py-4 bg-primary hover:bg-primary-hover text-white font-bold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Next: Add Links
@@ -531,7 +579,7 @@ function NewProjectForm() {
                       </button>
                       <button
                         type="submit"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || slugAvailable === false}
                         className="flex-1 px-6 py-4 bg-primary hover:bg-primary-hover text-white font-bold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {isSubmitting ? 'Submitting...' : 'Submit Build'}
