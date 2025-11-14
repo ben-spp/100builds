@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/lib/db';
-import { RowDataPacket } from 'mysql2';
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,18 +12,18 @@ export async function GET(request: NextRequest) {
     }
 
     // Find project with matching token
-    const [rows] = await pool.query<RowDataPacket[]>(
-      'SELECT * FROM projects WHERE slug = ? AND claim_token = ?',
+    const result = await pool.query(
+      'SELECT * FROM projects WHERE slug = $1 AND claim_token = $2',
       [slug, token]
     );
 
-    if (rows.length === 0) {
+    if (result.rows.length === 0) {
       return NextResponse.redirect(new URL('/?error=invalid-token', request.url));
     }
 
     // Mark as claimed
     await pool.query(
-      'UPDATE projects SET claimed = TRUE, claim_token = NULL WHERE slug = ?',
+      'UPDATE projects SET claimed = TRUE, claim_token = NULL WHERE slug = $1',
       [slug]
     );
 

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import crypto from 'crypto';
 import { ServerClient } from 'postmark';
-import { RowDataPacket } from 'mysql2';
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,19 +25,19 @@ export async function POST(request: NextRequest) {
     }
 
     // Find project
-    const [rows] = await pool.query<RowDataPacket[]>(
-      'SELECT * FROM projects WHERE slug = ?',
+    const result = await pool.query(
+      'SELECT * FROM projects WHERE slug = $1',
       [slug]
     );
 
-    if (rows.length === 0) {
+    if (result.rows.length === 0) {
       return NextResponse.json(
         { error: 'Project not found' },
         { status: 404 }
       );
     }
 
-    const project = rows[0];
+    const project = result.rows[0];
 
     // Check if already claimed
     if (project.claimed) {
@@ -53,7 +52,7 @@ export async function POST(request: NextRequest) {
 
     // Update project
     await pool.query(
-      'UPDATE projects SET email = ?, claim_token = ?, claimed = FALSE WHERE slug = ?',
+      'UPDATE projects SET email = $1, claim_token = $2, claimed = FALSE WHERE slug = $3',
       [email, claimToken, slug]
     );
 

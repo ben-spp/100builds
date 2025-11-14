@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { Project } from '@/types/project';
-import { RowDataPacket } from 'mysql2';
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,10 +32,10 @@ export async function POST(request: NextRequest) {
     );
 
     // Get total count
-    const [countResult] = await pool.query<RowDataPacket[]>(
+    const countResult = await pool.query(
       'SELECT COUNT(*) as count FROM projects'
     );
-    const projectNumber = countResult[0].count;
+    const projectNumber = parseInt(countResult.rows[0].count);
 
     return NextResponse.json({
       success: true,
@@ -58,12 +57,12 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const [rows] = await pool.query<RowDataPacket[]>(
+    const result = await pool.query(
       'SELECT * FROM projects ORDER BY created_at DESC'
     );
 
     // Parse JSON fields
-    const projects: Project[] = rows.map((row) => ({
+    const projects: Project[] = result.rows.map((row: any) => ({
       id: row.id,
       slug: row.slug,
       type: row.type,
