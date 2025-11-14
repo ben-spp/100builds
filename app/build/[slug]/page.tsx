@@ -1,27 +1,49 @@
 import { notFound } from 'next/navigation';
-import fs from 'fs';
-import path from 'path';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Badge from '@/components/Badge';
 import BuildPageClient from '@/components/BuildPageClient';
 import { Project } from '@/types/project';
+import pool from '@/lib/db';
 
-function getProjects(): Project[] {
-  const filePath = path.join(process.cwd(), 'data', 'projects.json');
-  const fileContents = fs.readFileSync(filePath, 'utf8');
-  return JSON.parse(fileContents);
+async function getProjects(): Promise<Project[]> {
+  try {
+    const result = await pool.query(
+      'SELECT * FROM projects ORDER BY created_at DESC'
+    );
+
+    return result.rows.map((row: any) => ({
+      id: row.id,
+      slug: row.slug,
+      type: row.type,
+      name: row.name,
+      description: row.description,
+      avatar: row.avatar,
+      featuredImage: row.featured_image,
+      tags: row.tags ? JSON.parse(row.tags) : [],
+      category: row.category,
+      needs: row.needs,
+      links: row.links ? JSON.parse(row.links) : {},
+      email: row.email,
+      claimed: Boolean(row.claimed),
+      claimToken: row.claim_token,
+      date: row.date,
+    }));
+  } catch (error) {
+    console.error('Error fetching projects:', error);
+    return [];
+  }
 }
 
-function getProject(slug: string): { project: Project; number: number } | null {
-  const projects = getProjects();
+async function getProject(slug: string): Promise<{ project: Project; number: number } | null> {
+  const projects = await getProjects();
   const index = projects.findIndex((p) => p.slug === slug);
   if (index === -1) return null;
   return { project: projects[index], number: index + 1 };
 }
 
-export function generateStaticParams() {
-  const projects = getProjects();
+export async function generateStaticParams() {
+  const projects = await getProjects();
   return projects.map((project) => ({
     slug: project.slug,
   }));
@@ -29,7 +51,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const data = getProject(slug);
+  const data = await getProject(slug);
   if (!data) return { title: 'Project not found' };
 
   return {
@@ -40,14 +62,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const data = getProject(slug);
+  const data = await getProject(slug);
 
   if (!data) {
     notFound();
   }
 
   const { project, number } = data;
-  const projects = getProjects();
+  const projects = await getProjects();
 
   // Generate initials from name if no avatar
   const initials = project.name

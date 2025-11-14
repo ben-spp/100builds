@@ -1,18 +1,20 @@
 import Link from 'next/link';
-import fs from 'fs';
-import path from 'path';
 import Header from '@/components/Header';
 import { Project } from '@/types/project';
+import pool from '@/lib/db';
 
-function getProjectCount(): number {
-  const filePath = path.join(process.cwd(), 'data', 'projects.json');
-  const fileContents = fs.readFileSync(filePath, 'utf8');
-  const projects: Project[] = JSON.parse(fileContents);
-  return projects.length;
+async function getProjectCount(): Promise<number> {
+  try {
+    const result = await pool.query('SELECT COUNT(*) as count FROM projects');
+    return parseInt(result.rows[0].count);
+  } catch (error) {
+    console.error('Error fetching project count:', error);
+    return 0;
+  }
 }
 
-export default function Home() {
-  const projectCount = getProjectCount();
+export default async function Home() {
+  const projectCount = await getProjectCount();
   const progress = (projectCount / 100) * 100;
 
   return (
