@@ -35,4 +35,6 @@ export interface Project {
   claimed?: boolean;
   claimToken?: string;
   date: string;
+  likes?: number;
+  allowContact?: boolean;
 }

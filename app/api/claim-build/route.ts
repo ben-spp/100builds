@@ -6,7 +6,7 @@ import { ServerClient } from 'postmark';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { slug, email } = body;
+    const { slug, email, allowContact = true } = body;
 
     if (!slug || !email) {
       return NextResponse.json(
@@ -52,8 +52,8 @@ export async function POST(request: NextRequest) {
 
     // Update project
     await pool.query(
-      'UPDATE projects SET email = $1, claim_token = $2, claimed = FALSE WHERE slug = $3',
-      [email, claimToken, slug]
+      'UPDATE projects SET email = $1, claim_token = $2, claimed = FALSE, allow_contact = $3 WHERE slug = $4',
+      [email, claimToken, allowContact, slug]
     );
 
     // Generate verification URL
@@ -77,10 +77,8 @@ export async function POST(request: NextRequest) {
             <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px;">
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 30px; text-align: center;">
-                    <h1 style="color: #ffffff !important; margin: 0; font-size: 28px; font-weight: 700; mso-line-height-rule: exactly;">
-                      <span style="color: #ffffff;">🎉 Your build is ready!</span>
-                    </h1>
+                  <td style="background: #667eea; border-radius: 12px; padding: 30px; text-align: center;">
+                    <h1 style="color: #333333; margin: 0; font-size: 28px; font-weight: 700;">🎉 Your build is ready!</h1>
                   </td>
                 </tr>
               </table>

@@ -10,6 +10,7 @@ interface ClaimBuildModalProps {
 
 export default function ClaimBuildModal({ projectSlug, projectNumber, onClaimed }: ClaimBuildModalProps) {
   const [email, setEmail] = useState('');
+  const [allowContact, setAllowContact] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -22,7 +23,7 @@ export default function ClaimBuildModal({ projectSlug, projectNumber, onClaimed 
       const response = await fetch('/api/claim-build', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ slug: projectSlug, email }),
+        body: JSON.stringify({ slug: projectSlug, email, allowContact }),
       });
 
       const data = await response.json();
@@ -71,6 +72,19 @@ export default function ClaimBuildModal({ projectSlug, projectNumber, onClaimed 
             required
             className="w-full rounded-xl border border-border bg-surface-0 p-3 text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
+
+          {/* Allow contact checkbox */}
+          <label className="flex items-start gap-2 text-left cursor-pointer">
+            <input
+              type="checkbox"
+              checked={allowContact}
+              onChange={(e) => setAllowContact(e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded border-border text-primary focus:ring-2 focus:ring-primary/50"
+            />
+            <span className="text-xs text-text-secondary">
+              Allow others to contact me through this listing
+            </span>
+          </label>
 
           {error && (
             <p className="text-sm text-red-500">{error}</p>
