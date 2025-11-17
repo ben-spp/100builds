@@ -329,7 +329,7 @@ function NewProjectForm() {
       </div>
 
       {/* Form Progress - Full Width Sticky on desktop */}
-      <div className="hidden lg:block sticky top-0 z-30 bg-surface-0 shadow-sm">
+      <div className="hidden lg:block sticky top-0 z-30 bg-surface-0 shadow-sm mb-12">
         <FormProgress
           currentStep={currentStep}
           totalSteps={2}
@@ -339,7 +339,7 @@ function NewProjectForm() {
       </div>
 
       {/* Form Section */}
-      <div className="pb-12 px-4">
+      <div className="pb-12 px-4 overflow-visible">
         <div className="max-w-7xl mx-auto">
           <form onSubmit={handleSubmit}>
             <div className="grid lg:grid-cols-2 gap-8">
