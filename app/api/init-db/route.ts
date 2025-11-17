@@ -1,7 +1,27 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/lib/db';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Security: Require authentication via secret token
+  const authToken = request.headers.get('x-init-token');
+  const expectedToken = process.env.DB_INIT_TOKEN;
+
+  // Reject if token is not configured or doesn't match
+  if (!expectedToken || authToken !== expectedToken) {
+    return NextResponse.json(
+      { error: 'Unauthorized' },
+      { status: 401 }
+    );
+  }
+
+  // Only allow in development or with explicit token
+  if (process.env.NODE_ENV === 'production' && !expectedToken) {
+    return NextResponse.json(
+      { error: 'Database initialization is disabled in production' },
+      { status: 403 }
+    );
+  }
+
   try {
     const createTableSQL = `
       CREATE TABLE IF NOT EXISTS projects (

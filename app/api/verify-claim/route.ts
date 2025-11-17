@@ -41,6 +41,7 @@ export async function GET(request: NextRequest) {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:8888';
     const buildUrl = `${baseUrl}/build/${slug}`;
     const client = new ServerClient(process.env.POSTMARK_SERVER_TOKEN || '');
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@100builds.com';
 
     try {
       // Parse tags
@@ -55,7 +56,7 @@ export async function GET(request: NextRequest) {
 
       await client.sendEmail({
         From: 'noreply@100builds.com',
-        To: 'admin@100builds.com',
+        To: adminEmail,
         Subject: '100builds - New listing activated',
         HtmlBody: `
           <!DOCTYPE html>

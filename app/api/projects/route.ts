@@ -40,10 +40,11 @@ export async function POST(request: NextRequest) {
 
     // Send admin notification email
     const client = new ServerClient(process.env.POSTMARK_SERVER_TOKEN || '');
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@100builds.com';
     try {
       await client.sendEmail({
         From: 'noreply@100builds.com',
-        To: 'admin@100builds.com',
+        To: adminEmail,
         Subject: '100builds - New listing created',
         HtmlBody: `
           <!DOCTYPE html>
