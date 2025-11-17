@@ -82,9 +82,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const data = await getProject(slug);
   if (!data) return { title: 'Project not found' };
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:8888';
+
   return {
     title: `${data.project.name} | 100builds`,
     description: data.project.description,
+    icons: {
+      icon: `${baseUrl}/favicon?slug=${slug}`,
+    },
   };
 }
 
