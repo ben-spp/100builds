@@ -7,9 +7,10 @@ interface ImageUploadProps {
   currentImage?: string;
   onUpload: (file: File) => Promise<string>;
   slug: string;
+  description?: string;
 }
 
-export default function ImageUpload({ label, currentImage, onUpload, slug }: ImageUploadProps) {
+export default function ImageUpload({ label, currentImage, onUpload, slug, description }: ImageUploadProps) {
   const [preview, setPreview] = useState<string | undefined>(currentImage);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -144,11 +145,9 @@ export default function ImageUpload({ label, currentImage, onUpload, slug }: Ima
 
       {error ? (
         <p className="text-xs text-red-500">{error}</p>
-      ) : (
-        <p className="text-xs text-text-muted">
-          Square images work best (200x200px recommended)
-        </p>
-      )}
+      ) : description ? (
+        <p className="text-xs text-text-muted">{description}</p>
+      ) : null}
     </div>
   );
 }

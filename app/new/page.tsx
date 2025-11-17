@@ -383,6 +383,7 @@ function NewProjectForm() {
                       currentImage={formData.avatar}
                       onUpload={handleImageUpload}
                       slug={slugify(formData.name) || 'temp'}
+                      description="Square images work best (200x200px recommended)"
                     />
 
                     <ImageUpload
@@ -390,6 +391,7 @@ function NewProjectForm() {
                       currentImage={formData.featuredImage}
                       onUpload={handleFeaturedImageUpload}
                       slug={slugify(formData.name) || 'temp'}
+                      description="Landscape images work best (1024x768px recommended)"
                     />
 
                     <TagInput

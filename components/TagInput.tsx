@@ -12,6 +12,7 @@ interface TagInputProps {
 
 export default function TagInput({ label, tags, onChange, placeholder, maxTags }: TagInputProps) {
   const [input, setInput] = useState('');
+  const MAX_TAG_LENGTH = 20;
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' || e.key === ',') {
@@ -23,10 +24,17 @@ export default function TagInput({ label, tags, onChange, placeholder, maxTags }
   };
 
   const addTag = () => {
-    const trimmed = input.trim();
+    const trimmed = input.trim().slice(0, MAX_TAG_LENGTH);
     if (trimmed && !tags.includes(trimmed) && (!maxTags || tags.length < maxTags)) {
       onChange([...tags, trimmed]);
       setInput('');
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value.length <= MAX_TAG_LENGTH) {
+      setInput(value);
     }
   };
 
@@ -60,7 +68,7 @@ export default function TagInput({ label, tags, onChange, placeholder, maxTags }
         <input
           type="text"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           onBlur={addTag}
           placeholder={tags.length === 0 ? placeholder : ''}
@@ -69,7 +77,7 @@ export default function TagInput({ label, tags, onChange, placeholder, maxTags }
         />
       </div>
       <p className="text-xs text-text-muted">
-        Press Enter or comma to add tags{maxTags ? ` (max ${maxTags})` : ''}
+        {input.length > 0 && `${MAX_TAG_LENGTH - input.length} chars left. `}Press Enter or comma to add{maxTags ? ` (max ${maxTags})` : ''}
       </p>
     </div>
   );
