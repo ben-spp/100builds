@@ -329,7 +329,7 @@ function NewProjectForm() {
       </div>
 
       {/* Form Progress - Full Width Sticky on desktop */}
-      <div className="hidden lg:block sticky top-0 z-30 mb-12 bg-surface-0">
+      <div className="hidden lg:block sticky top-0 z-30 bg-surface-0 shadow-sm">
         <FormProgress
           currentStep={currentStep}
           totalSteps={2}
