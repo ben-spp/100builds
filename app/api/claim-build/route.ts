@@ -75,9 +75,15 @@ export async function POST(request: NextRequest) {
               <meta name="viewport" content="width=device-width, initial-scale=1.0">
             </head>
             <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-              <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 30px; text-align: center; margin-bottom: 30px;">
-                <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">🎉 Your build is ready!</h1>
-              </div>
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px;">
+                <tr>
+                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 30px; text-align: center;">
+                    <h1 style="color: #ffffff !important; margin: 0; font-size: 28px; font-weight: 700; mso-line-height-rule: exactly;">
+                      <span style="color: #ffffff;">🎉 Your build is ready!</span>
+                    </h1>
+                  </td>
+                </tr>
+              </table>
 
               <div style="background: #f9fafb; border-radius: 12px; padding: 30px; margin-bottom: 20px;">
                 <p style="margin: 0 0 20px 0; font-size: 16px;">
