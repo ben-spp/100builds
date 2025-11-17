@@ -286,9 +286,9 @@ function NewProjectForm() {
   };
 
   return (
-    <div className="min-h-screen bg-surface-0">
+    <>
       {/* Header */}
-      <header className="relative top-0 left-0 right-0 z-40 bg-surface-0/80 backdrop-blur-md border-b border-border">
+      <header className="sticky top-0 left-0 right-0 z-40 bg-surface-0/80 backdrop-blur-md border-b border-border">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <svg className="w-6 h-7 text-text-primary" viewBox="0 0 78 88" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -300,6 +300,7 @@ function NewProjectForm() {
         </div>
       </header>
 
+      <div className="min-h-screen bg-surface-0">
       {/* Header Section */}
       <div className="pt-12 px-4">
         <div className="max-w-7xl mx-auto">
@@ -642,7 +643,8 @@ function NewProjectForm() {
         projectSlug={projectSlug}
         projectNumber={projectNumber}
       />
-    </div>
+      </div>
+    </>
   );
 }
 
