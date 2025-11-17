@@ -18,9 +18,9 @@ export default async function Home() {
   const progress = (projectCount / 100) * 100;
 
   return (
-    <div className="h-screen overflow-hidden">
+    <>
       <Header />
-      <main className="h-[calc(100vh-4rem)] flex flex-col overflow-hidden">
+      <main className="h-[calc(100vh-64px)] flex flex-col">
       {/* Progress Counter - Static on mobile, Fixed on desktop */}
       <div className="static lg:fixed top-0 lg:top-8 left-0 lg:left-1/2 lg:-translate-x-1/2 z-50 pt-4 lg:pt-0">
         <div className="bg-surface-1 border border-border rounded-full px-4 py-2 lg:px-6 lg:py-3 shadow-lg mx-auto w-fit">
@@ -96,6 +96,6 @@ export default async function Home() {
         </Link>
       </div>
     </main>
-    </div>
+    </>
   );
 }
