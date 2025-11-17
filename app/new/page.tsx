@@ -286,7 +286,7 @@ function NewProjectForm() {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-surface-0">
       {/* Header */}
       <header className="sticky top-0 left-0 right-0 z-40 bg-surface-0/80 backdrop-blur-md border-b border-border">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -300,8 +300,7 @@ function NewProjectForm() {
         </div>
       </header>
 
-      <div className="min-h-screen bg-surface-0">
-      {/* Header Section */}
+      {/* Title/Subtitle Section */}
       <div className="pt-12 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
@@ -318,8 +317,8 @@ function NewProjectForm() {
         </div>
       </div>
 
-      {/* Form Progress - Full Width Sticky */}
-      <div className="sticky top-0 z-30 mb-12 bg-surface-0 shadow-sm">
+      {/* Form Progress - Sticky */}
+      <div className="sticky top-16 z-30 mb-12 bg-surface-0 shadow-sm">
         <FormProgress
           currentStep={currentStep}
           totalSteps={2}
@@ -643,8 +642,7 @@ function NewProjectForm() {
         projectSlug={projectSlug}
         projectNumber={projectNumber}
       />
-      </div>
-    </>
+    </div>
   );
 }
 
