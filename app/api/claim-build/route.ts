@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
             </head>
             <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
               <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 30px; text-align: center; margin-bottom: 30px;">
-                <h1 style="color: white; margin: 0; font-size: 28px;">🎉 Your build is ready!</h1>
+                <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">🎉 Your build is ready!</h1>
               </div>
 
               <div style="background: #f9fafb; border-radius: 12px; padding: 30px; margin-bottom: 20px;">
@@ -87,9 +87,15 @@ export async function POST(request: NextRequest) {
                   Click the button below to claim your build and unlock editing abilities:
                 </p>
                 <div style="text-align: center; margin: 30px 0;">
-                  <a href="${verificationUrl}" style="display: inline-block; background: #667eea; color: #ffffff; text-decoration: none; padding: 12px 32px; border-radius: 12px; font-weight: 600; font-size: 16px;">
-                    Claim Your Build
-                  </a>
+                  <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
+                    <tr>
+                      <td style="background: #667eea; border-radius: 12px; padding: 14px 32px;">
+                        <a href="${verificationUrl}" style="color: #ffffff !important; text-decoration: none; font-weight: 600; font-size: 16px; display: block;">
+                          Claim Your Build
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
                 </div>
                 <p style="margin: 20px 0 0 0; font-size: 14px; color: #6b7280;">
                   This link expires in 24 hours. If you didn't create a build on 100builds, you can safely ignore this email.

@@ -12,12 +12,19 @@ export async function GET(request: NextRequest) {
     }
 
     // Find project with matching token
+    console.log('Looking for project with slug:', slug, 'and token:', token);
     const result = await pool.query(
       'SELECT * FROM projects WHERE slug = $1 AND claim_token = $2',
       [slug, token]
     );
 
+    console.log('Query result rows:', result.rows.length);
+    if (result.rows.length > 0) {
+      console.log('Found project:', result.rows[0].name);
+    }
+
     if (result.rows.length === 0) {
+      console.log('No matching project found - redirecting with error');
       return NextResponse.redirect(new URL('/?error=invalid-token', request.url));
     }
 
