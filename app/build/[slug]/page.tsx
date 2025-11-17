@@ -6,6 +6,10 @@ import BuildPageClient from '@/components/BuildPageClient';
 import { Project } from '@/types/project';
 import pool from '@/lib/db';
 
+// Force dynamic rendering to always get fresh data
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 async function getProjects(): Promise<Project[]> {
   try {
     const result = await pool.query(
