@@ -317,19 +317,8 @@ function NewProjectForm() {
         </div>
       </div>
 
-      {/* Form Progress - Full Width Sticky on mobile */}
-      <div className="lg:hidden sticky top-0 z-30 mb-12 backdrop-blur-md bg-surface-0/95">
-        <FormProgress
-          currentStep={currentStep}
-          totalSteps={2}
-          stepFieldCounts={stepFieldCounts}
-          completedFields={completedFields}
-          transparent
-        />
-      </div>
-
-      {/* Form Progress - Full Width Sticky on desktop */}
-      <div className="hidden lg:block sticky top-0 z-30 bg-surface-0 shadow-sm mb-12">
+      {/* Form Progress - Full Width Sticky */}
+      <div className="sticky top-0 z-30 mb-12 bg-surface-0 shadow-sm">
         <FormProgress
           currentStep={currentStep}
           totalSteps={2}
