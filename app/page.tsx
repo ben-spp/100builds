@@ -20,7 +20,7 @@ export default async function Home() {
   return (
     <>
       <Header />
-      <main className="h-[calc(100vh-64px)] flex flex-col">
+      <main className="h-screen flex flex-col">
       {/* Progress Counter - Static on mobile, Fixed on desktop */}
       <div className="static lg:fixed top-0 lg:top-8 left-0 lg:left-1/2 lg:-translate-x-1/2 z-50 pt-4 lg:pt-0">
         <div className="bg-surface-1 border border-border rounded-full px-4 py-2 lg:px-6 lg:py-3 shadow-lg mx-auto w-fit">
@@ -49,7 +49,7 @@ export default async function Home() {
         >
           <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 group-hover:from-primary/30 group-hover:to-primary/10 transition-all duration-500" />
 
-          <div className="relative h-full min-h-[50vh] lg:min-h-screen flex items-center justify-center p-8">
+          <div className="relative h-full min-h-[50vh] flex items-center justify-center p-8">
             <div className="text-center space-y-4 transform group-hover:scale-105 transition-transform duration-500">
               <div className="text-5xl lg:text-6xl font-black text-text-primary">
                 Add your build
@@ -77,7 +77,7 @@ export default async function Home() {
         >
           <div className="absolute inset-0 bg-gradient-to-br from-secondary/20 to-secondary/5 group-hover:from-secondary/30 group-hover:to-secondary/10 transition-all duration-500" />
 
-          <div className="relative h-full min-h-[50vh] lg:min-h-screen flex items-center justify-center p-8">
+          <div className="relative h-full min-h-[50vh] flex items-center justify-center p-8">
             <div className="text-center space-y-4 transform group-hover:scale-105 transition-transform duration-500">
               <div className="text-5xl lg:text-6xl font-black text-text-primary">
                 Find collaborators
