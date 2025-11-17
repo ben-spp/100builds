@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
         From: process.env.POSTMARK_FROM_EMAIL || 'noreply@100builds.com',
         To: project.email,
         ReplyTo: email,
-        Subject: `New message about "${project.name}" on 100builds`,
+        Subject: `🎉 New message regarding ${project.name}`,
         HtmlBody: `
           <!DOCTYPE html>
           <html>
@@ -142,14 +142,8 @@ export async function POST(request: NextRequest) {
             </head>
             <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
               <div style="background: #f9fafb; border-radius: 12px; padding: 30px; margin-bottom: 20px;">
-                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 24px;">New message about your project</h2>
-
-                <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">
-                  <strong>From:</strong> ${name}
-                </p>
-
-                <p style="margin: 0 0 20px 0; color: #6b7280; font-size: 14px;">
-                  <strong>Project:</strong> ${project.name}
+                <p style="margin: 0 0 20px 0; color: #111827; font-size: 16px;">
+                  ${name} messaged you regarding your <strong>${project.name}</strong> build:
                 </p>
 
                 <div style="background: white; border-radius: 8px; padding: 20px; margin: 20px 0;">
@@ -157,7 +151,7 @@ export async function POST(request: NextRequest) {
                 </div>
 
                 <p style="margin: 20px 0 0 0; font-size: 14px; color: #6b7280;">
-                  Reply directly to this email to respond to ${name} at ${email}
+                  Reply to this email to respond directly to ${name}
                 </p>
               </div>
 
@@ -168,16 +162,11 @@ export async function POST(request: NextRequest) {
           </html>
         `,
         TextBody: `
-New message about your project "${project.name}"
+${name} messaged you regarding your ${project.name} build:
 
-From: ${name}
-Email: ${email}
-
-Message:
 ${message}
 
----
-Reply directly to this email to respond to ${name}.
+Reply to this email to respond directly to ${name}
 
 100builds • Where builders showcase what they're building
         `,
